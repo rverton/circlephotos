@@ -25,7 +25,9 @@ var AlbumAddButton = React.createClass({
     },
 
     clickHandler: function() {
-        this.setState({active: true});
+        this.setState({active: true}, function() {
+            this.refs.albumName.getDOMNode().focus();
+        });
     },
 
     addAlbum: function() {
@@ -34,6 +36,7 @@ var AlbumAddButton = React.createClass({
 
         this.setState({active: false});
         this.refs.albumName.getDOMNode().value = '';
+        return false;
     },
 
     render: function() {

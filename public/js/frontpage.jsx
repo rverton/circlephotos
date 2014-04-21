@@ -63,7 +63,9 @@ var TryField = React.createClass({
     },
 
     clickHandler: function() {
-        this.setState({active:true});
+        this.setState({active:true}, function() {
+          this.refs.name.getDOMNode().focus();
+        });
     },
 
     createCircle: function() {
@@ -71,6 +73,7 @@ var TryField = React.createClass({
         c.new(this.refs.name.getDOMNode().value, function(id) {
             window.location.hash = '#/circles/' + id;
         });
+        return false;
     },
 
     render: function() {
