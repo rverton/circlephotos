@@ -112,8 +112,15 @@ publicRoutes.post('/circles/:id/albums', function*() {
         name:name,
         circleId: circle._id,
         photos: [
-            {url:''},
-            {url:''},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
+            {url:'/img/thumb_example.png'},
 
         ]
     });

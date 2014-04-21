@@ -8,6 +8,7 @@ var Button = ReactBootstrap.Button;
 
 var PhotoThumb = React.createClass({
     render: function() {
+
         return (
             <div className="photo">
                 <img src={this.props.photo.url} className="img-thumbnail" />
@@ -25,15 +26,22 @@ var Album = React.createClass({
     render: function() {
         var album = this.props.model.album;
 
-        var photos = [<div className="photo photos-add"><img src="/img/add_photo.png" className="img-thumbnail" onClick={this.addPhotos} /></div>];
+        var photos = [
+            <div className="col-md-3">
+                <div className="photo">
+                    <img src="/img/add_photo.png" className="img-thumbnail" onClick={this.addPhotos} />
+                </div>
+            </div>,
 
-        photos.concat(
             album.photos.map(function(p) {
+                console.log(p);
                 return (
-                    <PhotoThumb photo={p} />
+                    <div className="col-md-3">
+                        <PhotoThumb photo={p} />
+                    </div>
                 );
             })
-        );
+        ];
 
         if(photos.length === 0) {
             photos.push();
@@ -41,7 +49,7 @@ var Album = React.createClass({
 
         return (
             <div className="row">
-                <div className="col-md-10 circle">
+                <div className="col-md-12 circle">
 
                     <div className="pull-right">
                         <Button bsStyle="default" bsSize="small" onClick={this.openCircle}>
@@ -51,7 +59,7 @@ var Album = React.createClass({
                     </div>
 
                     <h4>{album.name}</h4>
-                    <div className="list-unstyled photos">
+                    <div className="row photos">
                     {photos}
                     </div>
                 </div>

@@ -43,8 +43,7 @@ p {
 }
 
 .photos .photo {
-    float:left;
-    width:20%;
+    margin:10px;
 }
 
 .photos-add {

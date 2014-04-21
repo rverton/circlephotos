@@ -90,7 +90,7 @@ var Circle = React.createClass({
 
         return (
             <div className="row">
-                <div className="col-md-10 circle">
+                <div className="col-md-12 circle">
 
                     <div className="pull-right">
                         <AlbumAddButton addAlbum={this.addAlbum}/>
