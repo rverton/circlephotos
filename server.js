@@ -76,7 +76,7 @@ publicRoutes.post('/circles', function*() {
     if(typeof name === 'undefined' || name === '')
         name = 'Unnamed';
 
-    var circle = yield circlesCollection.insert({name: name, albums: [{name:'Silvester 2014'}, {name:'Sommertrip 2013'}]});
+    var circle = yield circlesCollection.insert({name: name, albums: [], createdAt: new Date()});
 
     this.set('Content-Type', 'application/json');
     this.body = JSON.stringify(circle);

@@ -1,14 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/*jshint quotmark:false */
-/*jshint white:false */
-/*jshint trailing:false */
-/*jshint newcap:false */
-/*jshint devel:true */
-/*jshint browser:true */
 /* global React, ReactBootstrap */
-
 var Button = ReactBootstrap.Button;
 
 var AlbumItem = React.createClass({
@@ -37,20 +30,22 @@ var AlbumAddButton = React.createClass({
 
     addAlbum: function() {
         var name = this.refs.albumName.getDOMNode().value;
-
         this.props.addAlbum(name);
+
+        this.setState({active: false});
+        this.refs.albumName.getDOMNode().value = '';
     },
 
     render: function() {
         return (
             <div>
                 <div className={this.state.active ? '' : 'hide'}>
-                    <div className="form-inline">
+                    <form className="form-inline" onSubmit={this.addAlbum}>
                         <div className="form-group">
                             <input type="text" className="form-control form-input-big" placeholder="Name of Album" ref="albumName" />
                         </div>{' '}
                         <Button bsStyle="default" onClick={this.addAlbum}>Add</Button>
-                    </div>
+                    </form>
                 </div>
                 <div className={this.state.active ? 'hide' : ''}>
                     <Button bsStyle="default" onClick={this.clickHandler}>
@@ -77,6 +72,10 @@ var Circle = React.createClass({
                 <AlbumItem model={a} />
             );
         });
+
+        if(albums.length === 0) {
+            albums.push(<li><h4>Currently no album added.</h4></li>);
+        }
 
         return (
             <div className="row">

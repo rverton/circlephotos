@@ -1,12 +1,6 @@
 /**
  * @jsx React.DOM
  */
-/*jshint quotmark:false */
-/*jshint white:false */
-/*jshint trailing:false */
-/*jshint newcap:false */
-/*jshint devel:true */
-/*jshint browser:true */
 /*global React, document, Router, Circle */
 
 var app = app || {};
