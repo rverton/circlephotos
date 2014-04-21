@@ -58,11 +58,19 @@ var cx = React.addons.classSet;
             var router = Router({
                 '/': setState.bind(this, {page: '/'}),
                 '/circles/:id': function(id) {
-                    props.model.load(id);
+                    props.circleModel.load(id);
 
                     this.setState({
                         page: 'viewCircle',
-                        circle: props.model.circle
+                        circle: props.circleModel.circle
+                    });
+                }.bind(this),
+                '/albums/:id': function(id) {
+                    props.albumModel.load(id);
+
+                    this.setState({
+                        page: 'viewAlbum',
+                        album: props.albumModel.album
                     });
                 }.bind(this)
             });
@@ -86,7 +94,16 @@ var cx = React.addons.classSet;
                         <div>
                             <NavBar />
                             <div className="container">
-                                <Circle model={this.props.model} />
+                                <Circle model={this.props.circleModel} />
+                            </div>
+                        </div>
+                    );
+                case 'viewAlbum':
+                    return (
+                        <div>
+                            <NavBar />
+                            <div className="container">
+                                <Album model={this.props.albumModel} />
                             </div>
                         </div>
                     );
@@ -95,15 +112,17 @@ var cx = React.addons.classSet;
     });
 
     var circleModel = new app.Circle();
+    var albumModel = new app.Album();
 
     function render() {
         React.renderComponent(
-            <CFApp model={circleModel} />,
+            <CFApp circleModel={circleModel} albumModel={albumModel} />,
             document.getElementById('app')
         );
     }
 
     circleModel.subscribe(render);
+    albumModel.subscribe(render);
     render();
 
 })();

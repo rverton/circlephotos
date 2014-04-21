@@ -1,16 +1,24 @@
 /**
  * @jsx React.DOM
  */
+/* jshint browser:true */
 /* global React, ReactBootstrap */
+
 var Button = ReactBootstrap.Button;
 
 var AlbumItem = React.createClass({
+    openAlbum: function() {
+        var album = this.props.model;
+
+        window.location.hash = '#/albums/' + album.albumId;
+    },
+
     render: function() {
         var album = this.props.model;
 
         return (
-            <li className="well">
-                <h4>{album.name}</h4>
+            <li className="well album-item" onClick={this.openAlbum}>
+                <h4>{album.name}, <small>{album.photos} photos.</small></h4>
             </li>
         );
     }
@@ -72,7 +80,7 @@ var Circle = React.createClass({
 
         var albums = circle.albums.map(function(a) {
             return (
-                <AlbumItem model={a} />
+                <AlbumItem model={a} circle={circle} />
             );
         });
 

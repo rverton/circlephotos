@@ -37,3 +37,16 @@ p {
 .circle {
     margin-top:4em;
 }
+
+.circle .album-item {
+    cursor:pointer;
+}
+
+.photos .photo {
+    float:left;
+    width:20%;
+}
+
+.photos-add {
+    cursor:pointer;
+}

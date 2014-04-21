@@ -11,6 +11,7 @@ var wrap    = require('co-monk');
 var db      = require('monk')('localhost/circlefriends');
 
 var circlesCollection  = wrap(db.get('circles'));
+var albumsCollection   = wrap(db.get('albums'));
 
 // sessions
 var session = require('koa-sess');
@@ -107,12 +108,36 @@ publicRoutes.post('/circles/:id/albums', function*() {
         return;
     }
 
-    circle.albums.push({name: name});
+    var album = yield albumsCollection.insert({
+        name:name,
+        circleId: circle._id,
+        photos: [
+            {url:''},
+            {url:''},
+
+        ]
+    });
+
+    circle.albums.push({
+        name: name,
+        albumId: album._id,
+        photos: 0
+    });
 
     yield circlesCollection.updateById(circle._id, circle);
 
     this.set('Content-Type', 'application/json');
     this.body = JSON.stringify(circle);
+
+});
+
+publicRoutes.get('/albums/:id', function*() {
+    var id = this.params.id;
+
+    var album = yield albumsCollection.findOne({_id: id});
+
+    this.set('Content-Type', 'application/json');
+    this.body = JSON.stringify(album);
 
 });
 

@@ -71,6 +71,38 @@ var app = app || {};
         });
     };
 
+    app.Album = function () {
+        this.onChanges = [];
+        this.album = {
+            name: '',
+            photos: []
+        };
+    };
+
+    app.Album.prototype.subscribe = function (onChange) {
+        this.onChanges.push(onChange);
+    };
+
+    app.Album.prototype.inform = function() {
+        this.onChanges.forEach(function (cb) { cb(); });
+    };
+
+    app.Album.prototype.load = function(id) {
+
+        $.ajax({
+            type: 'GET',
+            url: '/albums/' + id,
+            success: function(data) {
+                this.album = data;
+                this.inform();
+            }.bind(this),
+            error: function() {
+                alert('Server error. Please try again later!');
+            }
+        });
+
+    };
+
 
 })();
 
