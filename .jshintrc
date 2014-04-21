@@ -1,0 +1,7 @@
+{
+    "esnext":true,
+    "noyield":true,
+    "undef":true,
+    "node":true,
+    "unused":true
+}
