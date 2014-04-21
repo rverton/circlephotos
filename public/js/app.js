@@ -92,7 +92,7 @@ var cx = React.addons.classSet;
                         <div>
                             <NavBar />
                             <div className="container">
-                                <Circle model={this.props.model.circle} />
+                                <Circle model={this.props.model} />
                             </div>
                         </div>
                     );

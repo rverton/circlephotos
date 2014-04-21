@@ -93,6 +93,29 @@ publicRoutes.get('/circles/:id', function*() {
 
 });
 
+publicRoutes.post('/circles/:id/albums', function*() {
+    var id = this.params.id;
+    var name = this.request.body.name;
+
+    if(typeof name === 'undefined' || name === '')
+        name = 'Unnamed';
+
+    var circle = yield circlesCollection.findOne({_id: id});
+
+    if(!circle) {
+        this.status = 404;
+        return;
+    }
+
+    circle.albums.push({name: name});
+
+    yield circlesCollection.updateById(circle._id, circle);
+
+    this.set('Content-Type', 'application/json');
+    this.body = JSON.stringify(circle);
+
+});
+
 app.use(secured.middleware());
 
 app.listen(3000);

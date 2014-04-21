@@ -28,6 +28,9 @@ p {
 
 .try .form-inline .form-group input {
     width:300px;
+}
+
+.form-input-big {
     height:51px;
 }
 

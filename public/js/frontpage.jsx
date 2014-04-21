@@ -67,18 +67,9 @@ var TryField = React.createClass({
     },
 
     createCircle: function() {
-        $.ajax({
-            type: 'POST',
-            url: '/circles',
-            data: JSON.stringify({ name: this.refs.name.getDOMNode().value }),
-            contentType: 'application/json',
-            success: function(data) {
-                var id = data._id;
-                window.location.hash = '#/circles/' + id;
-            },
-            error: function() {
-                alert('Server error. Please try again later!');
-            }
+        var c = new app.Circle();
+        c.new(this.refs.name.getDOMNode().value, function(id) {
+            window.location.hash = '#/circles/' + id;
         });
     },
 
@@ -95,7 +86,7 @@ var TryField = React.createClass({
                 <div className={this.state.active ? '' : 'hide'}>
                     <form className="form-inline" onSubmit={this.createCircle}>
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Name of Circle" ref="name" />
+                            <input type="text" className="form-control form-input-big" placeholder="Name of Circle" ref="name" />
                         </div>{' '}
                         <Button bsStyle="primary" onClick={this.createCircle}>Create</Button>
                     </form>
