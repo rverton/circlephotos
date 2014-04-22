@@ -14,7 +14,7 @@ var PhotoThumb = React.createClass({
 
         return (
             <div className="photo">
-                <img src={this.props.photo.url} className="img-thumbnail" />
+                <img src={this.props.photo.uploaded ? this.props.photo.tn : '/img/uploading.png'} className="img-thumbnail" />
             </div>
         );
     }
@@ -151,7 +151,7 @@ var Album = React.createClass({
     },
 
     uploadFinished: function() {
-        this.props.model.inform();
+        this.props.model.refresh();
         this.setState({upload: false});
     },
 
@@ -163,7 +163,7 @@ var Album = React.createClass({
         var album = this.props.model.album;
 
         var photos = [
-            <div className="col-md-3">
+            <div className="col-md-3 col-sm-4">
                 <div className="photo photos-add" onClick={this.addPhotos}>
                     <img src="/img/add_photo.png" className="img-thumbnail" />
                 </div>
@@ -171,7 +171,7 @@ var Album = React.createClass({
 
             album.photos.map(function(p) {
                 return (
-                    <div className="col-md-3">
+                    <div className="col-md-3 col-sm-4">
                         <PhotoThumb photo={p} />
                     </div>
                 );

@@ -44,6 +44,11 @@ p {
 
 .photos .photo {
     margin:10px;
+    height:200px;
+}
+
+.photos .photo img {
+    height:204px;
 }
 
 .photos-add {

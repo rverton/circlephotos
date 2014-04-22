@@ -87,6 +87,10 @@ var app = app || {};
         this.onChanges.forEach(function (cb) { cb(); });
     };
 
+    app.Album.prototype.refresh = function() {
+        this.load(this.album._id);
+    };
+
     app.Album.prototype.load = function(id) {
 
         $.ajax({

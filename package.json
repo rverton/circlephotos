@@ -30,6 +30,8 @@
     "koa-body-parser": "^1.0.0",
     "co-busboy": "^1.0.2",
     "aws-sdk": "^2.0.0-rc13",
-    "mongodb": "^1.4.2"
+    "mongodb": "^1.4.2",
+    "easyimage": "^0.1.6",
+    "async": "^0.7.0"
   }
 }
