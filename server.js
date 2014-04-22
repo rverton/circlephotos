@@ -6,7 +6,9 @@ var formidable  = require('koa-formidable');
 var views       = require('koa-views');
 var bodyParser  = require('koa-body-parser');
 var parse       = require('co-busboy');
+var s3          = require('./amazons3');
 var fs          = require('fs');
+var ObjectId    = require('mongodb').ObjectID;
 var app         = koa();
 
 var wrap    = require('co-monk');
@@ -14,11 +16,15 @@ var db      = require('monk')('localhost/circlefriends');
 
 var circlesCollection  = wrap(db.get('circles'));
 var albumsCollection   = wrap(db.get('albums'));
+var photosCollection   = wrap(db.get('photos'));
 
 // sessions
 var session = require('koa-sess');
 app.keys = ['3k4fal3t4gr!kflael'];
 app.use(session());
+
+// amazon aws s3 public url
+var AWS_PUBLIC = process.env.AWS_PUBLIC_URL || '';
 
 // auth
 require('./auth');
@@ -134,6 +140,17 @@ publicRoutes.get('/albums/:id', function*() {
 
     var album = yield albumsCollection.findOne({_id: id});
 
+    var photos = yield photosCollection.find({albumId: ObjectId(id)});
+
+    photos = photos.map(function(p) {
+        return {
+            url: AWS_PUBLIC + album._id + '_' + p._id + '.' + p.extension,
+            uploaded: p.uploaded
+        }
+    });
+
+    album.photos = photos;
+
     this.set('Content-Type', 'application/json');
     this.body = JSON.stringify(album);
 
@@ -154,10 +171,41 @@ publicRoutes.post('/albums/:id/photos', function*() {
     var parts = parse(this);
     var part;
 
-    while (part = yield parts) {
-        var stream = fs.createWriteStream('/tmp/' + Math.random());
-        part.pipe(stream);
-        console.log('uploading %s -> %s', part.filename, stream.path);
+    var handleUpload = function(photo, file) {
+        var fileExtension = part.filename.split('.').pop();
+        var filepath = '/tmp/' + photo.albumId + '_' + photo._id + '.' + fileExtension;
+        var mimeType = file.mimeType;
+
+        saveFile(file, filepath, function() {
+
+            s3.uploadFile(filepath, mimeType, function() {
+                photo.uploaded = true;
+                photo.extension = fileExtension;
+                photosCollection.updateById(photo._id, photo);
+                //TODO: Unlink file
+            });
+        });
+    };
+
+    var saveFile = function saveFile(file, filepath, cb) {
+        var stream = fs.createWriteStream(filepath);
+        var p = file.pipe(stream);
+
+        p.on('finish', function() {
+            cb();
+        });
+    };
+
+    while (part = yield parts) { // jshint ignore:line
+
+        var photo = yield photosCollection.insert({
+            albumId: album._id,
+            createdAt: new Date(),
+            uploaded: false,
+            extension: ''
+        });
+
+        handleUpload(photo, part);
     }
 
     this.set('Content-Type', 'application/json');
