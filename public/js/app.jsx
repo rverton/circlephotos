@@ -4,10 +4,11 @@
 /*global React, document, Router, Circle */
 
 var app = app || {};
-
 var cx = React.addons.classSet;
 
 (function() {
+
+    app.BASE_URL = 'http://localhost:3000';
 
     var NavBar = React.createClass({
         render: function() {

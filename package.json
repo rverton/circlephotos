@@ -27,6 +27,7 @@
     "koa-formidable": "^0.1.0",
     "koa-views": "^1.2.1",
     "underscore": "^1.6.0",
-    "koa-body-parser": "^1.0.0"
+    "koa-body-parser": "^1.0.0",
+    "co-busboy": "^1.0.2"
   }
 }

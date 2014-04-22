@@ -5,6 +5,8 @@ var serve       = require('koa-static');
 var formidable  = require('koa-formidable');
 var views       = require('koa-views');
 var bodyParser  = require('koa-body-parser');
+var parse       = require('co-busboy');
+var fs          = require('fs');
 var app         = koa();
 
 var wrap    = require('co-monk');
@@ -111,18 +113,7 @@ publicRoutes.post('/circles/:id/albums', function*() {
     var album = yield albumsCollection.insert({
         name:name,
         circleId: circle._id,
-        photos: [
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-            {url:'/img/thumb_example.png'},
-
-        ]
+        photos: []
     });
 
     circle.albums.push({
@@ -142,6 +133,32 @@ publicRoutes.get('/albums/:id', function*() {
     var id = this.params.id;
 
     var album = yield albumsCollection.findOne({_id: id});
+
+    this.set('Content-Type', 'application/json');
+    this.body = JSON.stringify(album);
+
+});
+
+publicRoutes.post('/albums/:id/photos', function*() {
+    var id = this.params.id;
+
+    var album = yield albumsCollection.findOne({_id: id});
+
+    if(!album) {
+        this.status = 404;
+        this.body = '';
+        return;
+    }
+
+    // multipart upload
+    var parts = parse(this);
+    var part;
+
+    while (part = yield parts) {
+        var stream = fs.createWriteStream('/tmp/' + Math.random());
+        part.pipe(stream);
+        console.log('uploading %s -> %s', part.filename, stream.path);
+    }
 
     this.set('Content-Type', 'application/json');
     this.body = JSON.stringify(album);

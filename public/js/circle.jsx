@@ -2,9 +2,11 @@
  * @jsx React.DOM
  */
 /* jshint browser:true */
-/* global React, ReactBootstrap */
+/* jshint devel:true */
+/* global React, ReactBootstrap, app */
 
 var Button = ReactBootstrap.Button;
+var ButtonToolbar = ReactBootstrap.ButtonToolbar;
 
 var AlbumItem = React.createClass({
     openAlbum: function() {
@@ -20,6 +22,23 @@ var AlbumItem = React.createClass({
             <li className="well album-item" onClick={this.openAlbum}>
                 <h4>{album.name}, <small>{album.photos} photos.</small></h4>
             </li>
+        );
+    }
+});
+
+var CircleShareButton = React.createClass({
+    share: function() {
+        var url = app.BASE_URL + '/circles/' + this.props.model._id;
+
+        prompt('Share this link with your friends:', url);
+    },
+
+    render: function() {
+        return (
+            <Button bsSize="small" onClick={this.share}>
+                <span className="glyphicon glyphicon-share-alt"></span>{' '}
+                Share
+            </Button>
         );
     }
 });
@@ -53,13 +72,13 @@ var AlbumAddButton = React.createClass({
                 <div className={this.state.active ? '' : 'hide'}>
                     <form className="form-inline" onSubmit={this.addAlbum}>
                         <div className="form-group">
-                            <input type="text" className="form-control form-input-big" placeholder="Name of Album" ref="albumName" />
+                            <input type="text" className="form-control" placeholder="Name of Album" ref="albumName" />
                         </div>{' '}
-                        <Button bsStyle="default" onClick={this.addAlbum}>Add</Button>
+                        <Button bsStyle="default" bsSize="small" onClick={this.addAlbum}>Add</Button>
                     </form>
                 </div>
                 <div className={this.state.active ? 'hide' : ''}>
-                    <Button bsStyle="default" onClick={this.clickHandler}>
+                    <Button bsStyle="default" bsSize="small" onClick={this.clickHandler}>
                         <span className="glyphicon glyphicon-plus"></span>{' '}
                         New Album
                     </Button>
@@ -92,8 +111,12 @@ var Circle = React.createClass({
             <div className="row">
                 <div className="col-md-12 circle">
 
+                    <div className="pull-right space-left">
+                        <CircleShareButton model={this.props.model.circle}/>
+                    </div>
+
                     <div className="pull-right">
-                        <AlbumAddButton addAlbum={this.addAlbum}/>
+                        <AlbumAddButton addAlbum={this.addAlbum} />
                     </div>
 
                     <h2>{circle.name}</h2>
