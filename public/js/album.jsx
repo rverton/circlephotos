@@ -24,7 +24,6 @@ var FileUpload = React.createClass({
     getInitialState: function() {
         return {
             uploadProgress: 0,
-            files : [],
             filedragHover: false
         };
     },
@@ -35,7 +34,11 @@ var FileUpload = React.createClass({
     },
 
     handleUploadFinished: function() {
-        this.setState({uploadProgress: 0});
+        this.setState({
+            uploadProgress: 0,
+            filedragHover: false
+        });
+
         this.props.uploaded();
     },
 
