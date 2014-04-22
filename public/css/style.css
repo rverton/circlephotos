@@ -62,3 +62,24 @@ p {
 .example-enter.example-enter-active {
   opacity: 1;
 }
+
+.filedrag
+{
+    font-weight: bold;
+    text-align: center;
+    padding: 1em 0;
+    margin: 1em 0;
+    color: #555;
+    border: 2px dashed #555;
+    border-radius: 7px;
+    cursor: default;
+
+    display:block;
+}
+
+.filedrag-hover
+{
+    background-color:#ccc;
+    border-color: #f00;
+    border-style: solid;
+}

@@ -24,7 +24,8 @@ var FileUpload = React.createClass({
     getInitialState: function() {
         return {
             uploadProgress: 0,
-            uploadFileCount: 0
+            files : [],
+            filedragHover: false
         };
     },
 
@@ -38,11 +39,9 @@ var FileUpload = React.createClass({
         this.props.uploaded();
     },
 
-    upload: function() {
+    uploadFiles: function(files) {
         var upHandler   = this.handleUploadProgress;
-        var files       = this.refs.fileselect.getDOMNode().files;
         var formData    = new FormData();
-
         var files_count = 0;
 
         for (var i = 0; i < files.length; i++) {
@@ -59,8 +58,6 @@ var FileUpload = React.createClass({
 
         if(files_count === 0)
             this.handleUploadFinished();
-        else
-            this.setState({uploadFileCount: files_count});
 
         $.ajax({
             url: '/albums/' + this.props.album._id + '/photos',
@@ -88,17 +85,50 @@ var FileUpload = React.createClass({
             contentType: false,
             processData: false
         }, 'json');
+
+    },
+
+    uploadSelect: function() {
+        var files = this.refs.fileselect.getDOMNode().files;
+        this.uploadFiles(files);
+    },
+
+    uploadDrag: function(e) {
+        e.preventDefault();
+
+        var files = e.target.files || e.dataTransfer.files;
+        this.uploadFiles(files);
+    },
+
+    uploadDragHover: function(e) {
+        if(e.type === 'dragover')
+            this.setState({filedragHover: true});
+        else
+            this.setState({filedragHover: false});
+
+        return false;
     },
 
     render: function() {
+        var dragClasses = {
+            'filedrag': true,
+            'filedrag-hover': this.state.filedragHover
+        };
+
         return (
             <div className="row file-upload">
                 <div className="col-md-12">
                     <h5>Choose your files to upload:</h5>
-                    <input type="file" ref="fileselect" name="photos[]" multiple="multiple" onChange={this.upload}/>
-                    <span className={this.state.uploadFileCount === 0 ? 'hide' : ''}>
-                        {this.state.uploadFileCount} files choosen.
-                    </span>
+                    <input type="file" ref="fileselect" name="photos[]" multiple="multiple" onChange={this.uploadSelect}/>
+                    <div
+                        className={React.addons.classSet(dragClasses)}
+                        ref="filedrag"
+                        onDrop={this.uploadDrag}
+                        onDragOver={this.uploadDragHover}
+                        onDragLeave={this.uploadDragHover}
+                    >
+                        or drag files here
+                    </div>
                     <ProgressBar active now={this.state.uploadProgress} />
                 </div>
             </div>
