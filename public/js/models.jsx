@@ -92,13 +92,33 @@ var app = app || {};
     };
 
     app.Album.prototype.load = function(id) {
+        this.doRequest(id, function() {
 
+            this.inform();
+
+            var photosUploaded = 0;
+            for(var i = 0; i < this.album.photos.length; i++) {
+                if(this.album.photos[i].uploaded)
+                    photosUploaded += 1;
+            }
+
+            if(this.album.photos.length !== photosUploaded) {
+                setTimeout(function () {
+                    this.refresh();
+                }.bind(this), 5000);
+            }
+
+        }.bind(this));
+
+    };
+
+    app.Album.prototype.doRequest = function(id, cb) {
         $.ajax({
             type: 'GET',
             url: '/albums/' + id,
             success: function(data) {
                 this.album = data;
-                this.inform();
+                cb();
             }.bind(this),
             error: function() {
                 alert('Server error. Please try again later!');

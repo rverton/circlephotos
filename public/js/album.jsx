@@ -4,10 +4,17 @@
 /* jshint browser:true */
 /* jshint devel:true*/
 
-/* global React, ReactBootstrap, $ */
+/* global React, ReactBootstrap, PhotoWall, $ */
 
 var Button = ReactBootstrap.Button;
 var ProgressBar = ReactBootstrap.ProgressBar;
+
+var getExtension = function (filename) {
+    if(filename.indexOf('.') === -1 )
+        return '';
+
+    return filename.split('.').pop().toLowerCase();
+};
 
 var PhotoThumb = React.createClass({
     render: function() {
@@ -28,6 +35,10 @@ var FileUpload = React.createClass({
         };
     },
 
+    clearFile: function () {
+        this.refs.uploadform.getDOMNode().reset();
+    },
+
     handleUploadProgress: function(e) {
         var pc = parseInt((e.loaded / e.total * 100));
         this.setState({uploadProgress: pc});
@@ -39,6 +50,7 @@ var FileUpload = React.createClass({
             filedragHover: false
         });
 
+        this.clearFile();
         this.props.uploaded();
     },
 
@@ -54,7 +66,11 @@ var FileUpload = React.createClass({
                 continue;
             }
 
-            console.log("file", file);
+            var ext = getExtension(file.name);
+
+            if(['jpg', 'png', 'jpeg', 'tiff'].indexOf(ext) === -1) {
+                continue;
+            }
 
             files_count += 1;
 
@@ -122,7 +138,7 @@ var FileUpload = React.createClass({
 
         return (
             <div className="row file-upload">
-                <div className="col-md-12">
+                <form ref="uploadform" className="col-md-12">
                     <h5>Choose your files to upload:</h5>
                     <input type="file" ref="fileselect" name="photos[]" multiple="multiple" onChange={this.uploadSelect}/>
                     <div
@@ -130,12 +146,11 @@ var FileUpload = React.createClass({
                         ref="filedrag"
                         onDrop={this.uploadDrag}
                         onDragOver={this.uploadDragHover}
-                        onDragLeave={this.uploadDragHover}
-                    >
+                        onDragLeave={this.uploadDragHover}>
                         or drag files here
                     </div>
                     <ProgressBar active now={this.state.uploadProgress} />
-                </div>
+                </form>
             </div>
         );
     }
@@ -144,7 +159,8 @@ var FileUpload = React.createClass({
 var Album = React.createClass({
     getInitialState: function() {
         return {
-            upload: false
+            upload: false,
+            photos: null
         };
     },
 
@@ -157,41 +173,48 @@ var Album = React.createClass({
         this.setState({upload: false});
     },
 
+    componentDidMount: function() {
+        PhotoWall.init({
+            el:             '#gallery',
+            zoom:           false,
+            zoomAction:     'mouseenter',
+            zoomTimeout:    500,
+            zoomDuration:   100,
+            showBox:        true,
+            showBoxSocial:  false,
+            padding:        5,
+            lineMaxHeight:  180
+        });
+
+        this.props.model.subscribe(this.reloadPhotowall);
+    },
+
     openCircle: function() {
         window.location.hash = '#/circles/' + this.props.model.album.circleId;
+    },
+
+    reloadPhotowall: function() {
+        PhotoWall.load(this.props.model.album.photos);
     },
 
     render: function() {
         var album = this.props.model.album;
 
-        var photos = [
-            <div className="col-md-3 col-sm-4">
-                <div className="photo photos-add" onClick={this.addPhotos}>
-                    <img src="/img/add_photo.png" className="img-thumbnail" />
-                </div>
-            </div>,
-
-            album.photos.map(function(p) {
-                return (
-                    <div className="col-md-3 col-sm-4">
-                        <PhotoThumb photo={p} />
-                    </div>
-                );
-            })
-        ];
-
-        if(photos.length === 0) {
-            photos.push();
-        }
-
         return (
             <div className="row">
                 <div className="col-md-12 circle">
 
-                    <div className="pull-right">
+                    <div className="pull-right space-left">
                         <Button bsStyle="default" bsSize="small" onClick={this.openCircle}>
                             <span className="glyphicon glyphicon-arrow-left"></span>{' '}
                             zurück
+                        </Button>
+                    </div>
+
+                    <div className="pull-right">
+                        <Button bsStyle="default" bsSize="small" onClick={this.addPhotos}>
+                            <span className="glyphicon glyphicon-upload"></span>{' '}
+                            Upload Photos
                         </Button>
                     </div>
 
@@ -202,7 +225,7 @@ var Album = React.createClass({
                     </div>
 
                     <div className="row photos">
-                    {photos}
+                        <div ref="gallery" id="gallery"><div className="body"></div></div>
                     </div>
                 </div>
             </div>

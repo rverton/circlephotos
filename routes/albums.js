@@ -11,6 +11,8 @@ var circlesCollection;
 var albumsCollection;
 var photosCollection;
 
+var THUMB_HEIGHT = 180;
+
 var photoQueue = async.queue(function (task, callback) {
 
     var paths   = task.paths;
@@ -52,7 +54,7 @@ var generateThumbnail = function generateThumbnail(filepath, filepath_tn, cb) {
     easyimg.thumbnail({
         src: filepath,
         dst: filepath_tn,
-        width:204, height:204,
+        height: THUMB_HEIGHT, width: THUMB_HEIGHT*2,
         x:0, y:0
     }, function(err) {
         if (err)
@@ -107,9 +109,20 @@ module.exports = function(router, db, AWS_PUBLIC) {
         var photos = yield photosCollection.find({albumId: ObjectId(id)});
 
         photos = photos.map(function(p) {
+            var tn_path;
+
+            if(p.uploaded)
+                tn_path = AWS_PUBLIC + album._id + '_' + p._id + '_tn.' + p.extension;
+            else
+                tn_path = '/img/uploading.png';
+
             return {
-                url: AWS_PUBLIC + album._id + '_' + p._id + '.' + p.extension,
-                tn: AWS_PUBLIC + album._id + '_' + p._id + '_tn.' + p.extension,
+                id: p._id,
+                img: AWS_PUBLIC + album._id + '_' + p._id + '.' + p.extension,
+                th: {
+                    src: tn_path,
+                    height: THUMB_HEIGHT,
+                },
                 uploaded: p.uploaded
             };
         });
