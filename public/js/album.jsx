@@ -21,7 +21,7 @@ var PhotoThumb = React.createClass({
 
         return (
             <div className="photo">
-                <img src={this.props.photo.uploaded ? this.props.photo.tn : '/img/uploading.png'} className="img-thumbnail" />
+                <a><img src={this.props.photo.th.src}/></a>
             </div>
         );
     }
@@ -173,32 +173,18 @@ var Album = React.createClass({
         this.setState({upload: false});
     },
 
-    componentDidMount: function() {
-        PhotoWall.init({
-            el:             '#gallery',
-            zoom:           false,
-            zoomAction:     'mouseenter',
-            zoomTimeout:    500,
-            zoomDuration:   100,
-            showBox:        true,
-            showBoxSocial:  false,
-            padding:        5,
-            lineMaxHeight:  180
-        });
-
-        this.props.model.subscribe(this.reloadPhotowall);
-    },
-
     openCircle: function() {
         window.location.hash = '#/circles/' + this.props.model.album.circleId;
     },
 
-    reloadPhotowall: function() {
-        PhotoWall.load(this.props.model.album.photos);
-    },
-
     render: function() {
         var album = this.props.model.album;
+
+        var photos = album.photos.map(function(p) {
+            return (
+                <PhotoThumb photo={p} />
+            );
+        });
 
         return (
             <div className="row">
@@ -224,8 +210,8 @@ var Album = React.createClass({
                         <FileUpload album={album} uploaded={this.uploadFinished}/>
                     </div>
 
-                    <div className="row photos">
-                        <div ref="gallery" id="gallery"><div className="body"></div></div>
+                    <div className="photos">
+                        {photos}
                     </div>
                 </div>
             </div>

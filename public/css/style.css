@@ -42,13 +42,22 @@ p {
     cursor:pointer;
 }
 
-.photos .photo {
-    margin:10px;
-    height:200px;
-}
+.photo {
+    float:left;
 
-.photos .photo img {
-    height:204px;
+    margin-right:10px;
+    margin-bottom:10px;
+}
+.photo a {
+    display:block;
+}
+.photo a:hover {
+    box-shadow:         1px 1px 5px #333;
+    -webkit-box-shadow: 1px 1px 5px #333;
+    -moz-box-shadow:    1px 1px 5px #333;
+}
+.photo img {
+    height:180px;
 }
 
 .photos-add {
