@@ -117,11 +117,10 @@ module.exports = function(router, db, AWS_PUBLIC) {
                 tn_path = '/img/uploading.png';
 
             return {
-                id: p._id,
-                img: AWS_PUBLIC + album._id + '_' + p._id + '.' + p.extension,
+                src: AWS_PUBLIC + album._id + '_' + p._id + '.' + p.extension,
                 th: {
                     src: tn_path,
-                    height: THUMB_HEIGHT,
+                    height: THUMB_HEIGHT
                 },
                 uploaded: p.uploaded
             };

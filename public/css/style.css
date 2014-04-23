@@ -50,6 +50,7 @@ p {
 }
 .photo a {
     display:block;
+    cursor:pointer;
 }
 .photo a:hover {
     box-shadow:         1px 1px 5px #333;
@@ -96,4 +97,21 @@ p {
     background-color:#ccc;
     border-color: #f00;
     border-style: solid;
+}
+
+/** Modal **/
+.ModalBackdrop {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+}
+
+.ModalContent {
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
 }
