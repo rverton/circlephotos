@@ -110,8 +110,12 @@ p {
 }
 
 .ModalContent {
-    background: white;
+    background: transparent;
     margin-left: auto;
     margin-right: auto;
     margin-top: 40px;
+}
+
+img.magnify {
+    margin:0 auto;
 }

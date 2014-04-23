@@ -88,7 +88,7 @@ var MagnifyImage = React.createClass({
         }
         return (
             <Modal onRequestClose={this.handleClick}>
-                <img src={this.props.img} className="img-responsive" onClick={this.handleClick} />
+                <img src={this.props.img} className="img-responsive magnify" onClick={this.handleClick} />
             </Modal>
         );
     },
