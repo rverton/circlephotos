@@ -54,6 +54,8 @@ var FileUpload = React.createClass({
                 continue;
             }
 
+            console.log("file", file);
+
             files_count += 1;
 
             formData.append('photos[]', file, file.name);
