@@ -8,24 +8,6 @@
 var Button = ReactBootstrap.Button;
 var ButtonToolbar = ReactBootstrap.ButtonToolbar;
 
-var AlbumItem = React.createClass({
-    openAlbum: function() {
-        var album = this.props.model;
-
-        window.location.hash = '#/albums/' + album.albumId;
-    },
-
-    render: function() {
-        var album = this.props.model;
-
-        return (
-            <li className="well album-item" onClick={this.openAlbum}>
-                <h4>{album.name}, <small>{album.photos} photos.</small></h4>
-            </li>
-        );
-    }
-});
-
 var CircleShareButton = React.createClass({
     share: function() {
         var url = app.BASE_URL + '/circles/' + this.props.model._id;
