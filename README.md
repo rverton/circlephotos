@@ -38,6 +38,11 @@ Use your environment variables to configure Amazon S3 access:
     export AWS_SECRET_ACCESS_KEY=
     export AWS_PUBLIC_URL=
 
+## Developing with reactjs
+When working with the .jsx file compile them on-the-fly with:
+
+    jsx --extension jsx --watch public/jsx/ public/js/
+
 ## Credits
 
 Code by [Robin Verton](http://robinverton.de).

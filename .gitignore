@@ -25,3 +25,6 @@ build/Release
 node_modules
 
 public/lib
+
+# Ignore jsx module cache
+public/js/.module-cache
