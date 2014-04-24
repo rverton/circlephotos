@@ -88,7 +88,6 @@ var cx = React.addons.classSet;
                         <div>
                             <NavBar transparent={true} />
                             <Splash />
-                            <DummyContent />
                         </div>
                     );
                 case 'viewCircle':

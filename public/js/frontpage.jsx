@@ -14,29 +14,6 @@ var app = app || {};
 var cx = React.addons.classSet;
 var Button = ReactBootstrap.Button;
 
-var DummyContent = React.createClass({
-    render: function() {
-        return (
-            <div className="container">
-              <div className="row">
-                <div className="col-md-8 col-md-offset-2">
-                  <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum, nam, neque, aliquid, sequi consequuntur earum ipsa corporis veritatis quam facilis labore perspiciatis nihil beatae vel adipisci dolore obcaecati harum ullam.
-                  </p>
-                  <p>
-                    <ol>
-                      <li>Create photo circle.</li>
-                      <li>Invite friends.</li>
-                      <li>Collaborativly upload photos.</li>
-                    </ol>
-                  </p>
-                </div>
-              </div>
-            </div>
-        );
-    }
-});
-
 var Splash = React.createClass({
     render: function() {
         return (
