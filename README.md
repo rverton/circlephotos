@@ -4,6 +4,8 @@ Host your own Photo-Cloud and allow friends to create circles and albums to coll
 
 Based on [koajs](http://koajs.com/) and [reactjs](http://facebook.github.io/react/).
 
+Demo: [http://circlephotos.robinverton.de/](http://circlephotos.robinverton.de/)
+
 ## Requirements
 
     node.js ^0.11.12
