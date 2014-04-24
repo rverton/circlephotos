@@ -11,12 +11,8 @@ var ModalTrigger = ReactBootstrap.ModalTrigger;
 
 var ShareModal = React.createClass({
 
-    notifyEmail: function() {
-        alert('Not yet implemented');
-    },
-
     shareLink: function() {
-        return app.BASE_URL + '/circles/' + this.props.circle._id;
+        return 'http://' + app.BASE_URL + '/#/circles/' + this.props.circle._id;
     },
 
     render: function() {
@@ -24,18 +20,12 @@ var ShareModal = React.createClass({
             <Modal title="Share this circle" animation={false} className="shareModal">
               <div className="modal-body">
 
+                <a title="Circle Photos" className="btn btn-primary btn-sm" href={this.shareLink()}>Drag this button to your bookmarks bar</a>
+
                 <p>
                     Send your friends this link:<br />
                     <input type="text" class="form-control" value={this.shareLink()} />
                 </p>
-
-                <p>
-                    or notify them via e-mail:<br />
-                    <input ref="notifyEmail" type="text" class="form-control" placeholder="friend@email.com" /><br />
-                    <button className="notify" type="button" onClick={this.notifyEmail}>Send Link by email</button>
-                </p>
-
-                <div className="clearfix"></div>
 
               </div>
             </Modal>
@@ -44,11 +34,6 @@ var ShareModal = React.createClass({
 });
 
 var CircleShareButton = React.createClass({
-    share: function() {
-
-
-        prompt('Share this link with your friends:', url);
-    },
 
     render: function() {
         return (
