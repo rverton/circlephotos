@@ -19,6 +19,14 @@ var photoQueue = async.queue(function (task, callback) {
     var photo   = task.photo;
 
     async.series([
+        function autoRotate(callback) {
+            var command = 'convert ' + paths.path + ' -auto-orient ' + paths.path;
+            easyimg.exec(command, function(err) {
+                if (err)
+                    console.log('Auto-orient failed: ', err);
+                callback();
+            });
+        },
         function generateThumb(callback) {
             generateThumbnail(paths.path, paths.path_tn, callback);
         },

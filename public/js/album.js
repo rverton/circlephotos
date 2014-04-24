@@ -262,7 +262,7 @@ var Album = React.createClass({displayName: 'Album',
                     React.DOM.div( {className:"pull-right space-left"}, 
                         Button( {bsStyle:"default", bsSize:"small", onClick:this.openCircle}, 
                             React.DOM.span( {className:"glyphicon glyphicon-arrow-left"}),' ',
-                            "back"
+                            "Back"
                         )
                     ),
 
@@ -272,6 +272,8 @@ var Album = React.createClass({displayName: 'Album',
                             "Upload Photos"
                         )
                     ),
+
+                    React.DOM.div( {className:"visible-sm"}, React.DOM.br(null )),
 
                     React.DOM.h4(null, album.name,", ", React.DOM.small(null, album.photos.length, " photos.")),
 

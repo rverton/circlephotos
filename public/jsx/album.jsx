@@ -262,7 +262,7 @@ var Album = React.createClass({
                     <div className="pull-right space-left">
                         <Button bsStyle="default" bsSize="small" onClick={this.openCircle}>
                             <span className="glyphicon glyphicon-arrow-left"></span>{' '}
-                            back
+                            Back
                         </Button>
                     </div>
 
@@ -272,6 +272,8 @@ var Album = React.createClass({
                             Upload Photos
                         </Button>
                     </div>
+
+                    <div className="visible-sm"><br /></div>
 
                     <h4>{album.name}, <small>{album.photos.length} photos.</small></h4>
 
