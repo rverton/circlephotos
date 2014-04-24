@@ -1,6 +1,7 @@
 /**
  * @jsx React.DOM
  */
+ /* jshint browser:true */
 /*global React, document, Router, Circle */
 
 var app = app || {};
@@ -8,7 +9,7 @@ var cx = React.addons.classSet;
 
 (function() {
 
-    app.BASE_URL = 'http://localhost:3000';
+    app.BASE_URL = window.location.host;
 
     var NavBar = React.createClass({
         render: function() {
