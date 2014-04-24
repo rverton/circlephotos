@@ -10,7 +10,7 @@ var db      = require('monk')('localhost/circlephotos');
 
 // sessions
 var session = require('koa-sess');
-app.keys    = ['random-key'];
+app.keys    = ['CHANGE-ME'];
 app.use(session());
 
 // amazon aws s3 public url

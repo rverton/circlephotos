@@ -228,7 +228,7 @@ var Album = React.createClass({
                     <div className="pull-right space-left">
                         <Button bsStyle="default" bsSize="small" onClick={this.openCircle}>
                             <span className="glyphicon glyphicon-arrow-left"></span>{' '}
-                            zurück
+                            back
                         </Button>
                     </div>
 

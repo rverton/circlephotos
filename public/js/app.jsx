@@ -34,7 +34,7 @@ var cx = React.addons.classSet;
                     <div className="navbar-collapse collapse" id="navbar-main">
                       <ul className="nav navbar-nav">
                         <li className="dropdown">
-                          <a href="#">Create circle</a>
+                          <a href="#/">Create circle</a>
                         </li>
                       </ul>
                     </div>

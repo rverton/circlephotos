@@ -36,3 +36,9 @@ Use your environment variables to configure Amazon S3 access:
     export AWS_SECRET_ACCESS_KEY=
     export AWS_PUBLIC_URL=
 
+## Credits
+
+Code by [Robin Verton](http://robinverton.de).
+
+Frontpage image by [Billy Lam](http://www.flickr.com/photos/billy_lam/).
+

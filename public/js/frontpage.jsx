@@ -22,7 +22,7 @@ var Splash = React.createClass({
                 <div className="row">
                   <div className="col-md-8 col-md-offset-2">
                     <h1>Create a photocircle, share photo albums.</h1>
-                    <p>Invite friends, create albums and collaborativly upload photos.</p>
+                    <p>Invite friends, create albums and collaborative upload photos.</p>
 
                     <TryField />
 
