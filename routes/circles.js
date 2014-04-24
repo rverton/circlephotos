@@ -31,6 +31,11 @@ module.exports = function(router, db) {
 
         var circle = yield circlesCollection.findById(id);
 
+        if(!circle) {
+            this.status = 404;
+            return;
+        }
+
         circle.albums = yield albumsCollection.find({circleId: circle._id});
 
         this.set('Content-Type', 'application/json');

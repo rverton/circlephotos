@@ -30,9 +30,7 @@ var app = app || {};
                 this.circle = data;
                 this.inform();
             }.bind(this),
-            error: function() {
-                alert('Server error. Please try again later!');
-            }
+            error: handleError
         });
 
     };
@@ -47,9 +45,7 @@ var app = app || {};
                 var id = data._id;
                 cb(id);
             },
-            error: function() {
-                alert('Server error. Please try again later!');
-            }
+            error: handleError
         });
     };
 
@@ -65,9 +61,7 @@ var app = app || {};
                 this.inform();
             }.bind(this),
 
-            error: function() {
-                alert('Server error. Please try again later!');
-            }
+            error: handleError
         });
     };
 
@@ -121,11 +115,16 @@ var app = app || {};
                 this.album = data;
                 cb();
             }.bind(this),
-            error: function() {
-                alert('Server error. Please try again later!');
-            }
+            error: handleError
         });
 
+    };
+
+    var handleError = function(request, status, err) {
+        if(!err)
+            alert('Unrecognized error. Please try again later.');
+        else
+            alert('Error: ' + err);
     };
 
 

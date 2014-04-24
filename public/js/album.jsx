@@ -213,8 +213,6 @@ var Album = React.createClass({
     render: function() {
         var album = this.props.model.album;
 
-        var test = "abc";
-
         var photos = album.photos.map(function(p) {
             return (
                 <PhotoThumb photo={p} />
