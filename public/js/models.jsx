@@ -75,6 +75,7 @@ var app = app || {};
         this.onChanges = [];
         this.album = {
             name: '',
+            photoCount: 0,
             photos: []
         };
     };

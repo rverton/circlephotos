@@ -5,6 +5,7 @@
     "react": "0.9.0",
     "react-bootstrap": "git://github.com/react-bootstrap/react-bootstrap-bower.git#~0.9.0",
     "director": "~1.2.2",
-    "zepto": "~1.1.3"
+    "zepto": "~1.1.3",
+    "color-thief": "*"
   }
 }

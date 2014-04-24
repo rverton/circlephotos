@@ -1,5 +1,4 @@
 var wrap        = require('co-monk');
-var ObjectId    = require('mongodb').ObjectID;
 var parse       = require('co-busboy');
 var easyimg     = require('easyimage');
 var s3          = require('../amazons3');
@@ -12,6 +11,7 @@ var albumsCollection;
 var photosCollection;
 
 var THUMB_HEIGHT = 180;
+var AWS_PUBLIC;
 
 var photoQueue = async.queue(function (task, callback) {
 
@@ -44,7 +44,9 @@ var photoQueue = async.queue(function (task, callback) {
         if (fs.existsSync(paths.path_tn))
             fs.unlink(paths.path_tn);
 
-        callback();
+        var examplePhoto = AWS_PUBLIC + photo.albumId + '_' + photo._id + '_tn.' + photo.extension;
+        albumsCollection.updateById(photo.albumId, {'$set': { examplePhoto: examplePhoto }}, callback);
+
     });
 
 }, 2);
@@ -96,7 +98,9 @@ var getPaths = function getPaths(photo, file) {
 
 };
 
-module.exports = function(router, db, AWS_PUBLIC) {
+module.exports = function(router, db, AWS_URI) {
+
+    AWS_PUBLIC = AWS_URI;
 
     circlesCollection  = wrap(db.get('circles'));
     albumsCollection   = wrap(db.get('albums'));
@@ -105,8 +109,8 @@ module.exports = function(router, db, AWS_PUBLIC) {
     router.get('/albums/:id', function*() {
         var id = this.params.id;
 
-        var album = yield albumsCollection.findOne({_id: id});
-        var photos = yield photosCollection.find({albumId: ObjectId(id)});
+        var album   = yield albumsCollection.findById(id);
+        var photos  = yield photosCollection.find({albumId: album._id});
 
         photos = photos.map(function(p) {
             var tn_path;
@@ -136,7 +140,6 @@ module.exports = function(router, db, AWS_PUBLIC) {
         var id = this.params.id;
 
         var album = yield albumsCollection.findOne({_id: id});
-        var circle = yield circlesCollection.findOne({_id: album.circleId});
 
         if(!album) {
             this.status = 404;
@@ -177,12 +180,9 @@ module.exports = function(router, db, AWS_PUBLIC) {
             uploadedFiles += 1;
         }
 
-        for(var i = 0; i < circle.albums.length; i++) {
-            if(album._id.equals(circle.albums[i].albumId))
-                circle.albums[i].photos += uploadedFiles;
-        }
+        album.photoCount += uploadedFiles;
 
-        yield circlesCollection.updateById(circle._id, circle);
+        yield albumsCollection.updateById(album._id, album);
 
         this.set('Content-Type', 'application/json');
         this.body = JSON.stringify(album);

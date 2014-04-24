@@ -4,7 +4,7 @@
 /* jshint browser:true */
 /* jshint devel:true*/
 
-/* global React, ReactBootstrap, $, Modal, ReactLayeredComponentMixin */
+/* global React, ReactBootstrap, $, Modal, ReactLayeredComponentMixin, ColorThief */
 
 var Button = ReactBootstrap.Button;
 var ProgressBar = ReactBootstrap.ProgressBar;
@@ -254,18 +254,74 @@ var Album = React.createClass({
 });
 
 var AlbumItem = React.createClass({
+    getInitialState: function() {
+        return {
+            albumStyle: {},
+            imageStyle: {},
+            textStyle: {}
+        };
+    },
+
     openAlbum: function() {
         var album = this.props.model;
 
-        window.location.hash = '#/albums/' + album.albumId;
+        window.location.hash = '#/albums/' + album._id;
+    },
+
+    componentDidMount: function() {
+
+        if(this.props.model.examplePhoto === '' || typeof this.props.model.examplePhoto === 'undefined') {
+            this.setState({
+                albumStyle: { backgroundColor: '#eeeeee'}
+            });
+            return;
+        }
+
+        var colorThief  = new ColorThief();
+        var img = document.createElement('img');
+        img.crossOrigin = 'Anonymous';
+        img.src = this.props.model.examplePhoto;
+
+        img.onload = function() {
+            var color = colorThief.getColor(img);
+            var colorRgb = 'rgb(' + color.join(',') + ')';
+
+            var albumStyle = {
+                backgroundColor: colorRgb
+            };
+
+            var imageStyle = {
+                boxShadow: colorRgb + ' 12px 15px 20px inset, ' + colorRgb + ' -1px -1px 150px inset'
+            };
+
+            var textStyle = {
+                color: 'rgb(' + (255 - color[0]) + ',' + (255 - color[1]) + ',' + (255 - color[2]) + ')'
+            };
+
+            this.setState({
+                albumStyle: albumStyle,
+                imageStyle: imageStyle,
+                textStyle: textStyle
+            });
+        }.bind(this);
+
     },
 
     render: function() {
         var album = this.props.model;
+        console.log(album);
+
+        var classes = React.addons.classSet({
+            'hide': (typeof this.state.albumStyle.backgroundColor === 'undefined'),
+            'album-item':true
+        });
+
         return (
-            <li className="album-item" onClick={this.openAlbum}>
-                <img src={album.examplePhoto} />
-                <h4>{album.name}, <small>{album.photos} photos.</small></h4>
+            <li style={this.state.albumStyle} className={classes} onClick={this.openAlbum}>
+                <div style={this.state.imageStyle} className="art-wrap">
+                    <img ref="examplePhoto" src={album.examplePhoto} />
+                </div>
+                <h4 style={this.state.textStyle}>{album.name}, <small>{album.photoCount} photos.</small></h4>
             </li>
         );
     }

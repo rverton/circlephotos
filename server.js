@@ -44,7 +44,7 @@ publicRoutes.get('/', function*() {
 });
 
 require('./routes/albums')(publicRoutes, db, AWS_PUBLIC);
-require('./routes/circles')(publicRoutes, db, AWS_PUBLIC);
+require('./routes/circles')(publicRoutes, db);
 
 app.use(publicRoutes.middleware());
 

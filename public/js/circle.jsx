@@ -6,7 +6,6 @@
 /* global React, ReactBootstrap, app */
 
 var Button = ReactBootstrap.Button;
-var ButtonToolbar = ReactBootstrap.ButtonToolbar;
 
 var CircleShareButton = React.createClass({
     share: function() {
