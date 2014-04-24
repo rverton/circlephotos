@@ -52,7 +52,7 @@ var ModalSimple = React.createClass({
     render: function() {
         return this.transferPropsTo(
             <div className="ModalBackdrop" onClick={this.handleBackdropClick}>
-                <div className="ModalContent" onClick={this.killClick}>
+                <div className="ModalContent" onClick={this.handleBackdropClick}>
                     {this.props.children}
                 </div>
             </div>
