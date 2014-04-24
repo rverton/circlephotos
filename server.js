@@ -48,5 +48,7 @@ require('./routes/circles')(publicRoutes, db);
 
 app.use(publicRoutes.middleware());
 
-app.listen(3000);
-console.log('App started at :3000');
+var port = process.env.PORT || 3000;
+
+app.listen(port);
+console.log('App started at :', port);
