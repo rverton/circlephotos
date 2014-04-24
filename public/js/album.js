@@ -4,7 +4,7 @@
 /* jshint browser:true */
 /* jshint devel:true*/
 
-/* global React, ReactBootstrap, $, ModalSimple, ReactLayeredComponentMixin, ColorThief */
+/* global React, ReactBootstrap, $, ModalSimple, ReactLayeredComponentMixin, async, ColorThief */
 
 var Button = ReactBootstrap.Button;
 var ProgressBar = ReactBootstrap.ProgressBar;
@@ -64,8 +64,18 @@ var FileUpload = React.createClass({displayName: 'FileUpload',
     getInitialState: function() {
         return {
             uploadProgress: 0,
-            filedragHover: false
+            filedragHover: false,
+            uploadInProgress: false,
+            uploadedFiles: 0
         };
+    },
+
+    // Single file was successfull uploaded
+    fileUploaded: function() {
+        this.setState({
+            uploadedFiles: this.state.uploadedFiles + 1,
+            uploadProgress: 0
+        });
     },
 
     clearFile: function () {
@@ -77,20 +87,28 @@ var FileUpload = React.createClass({displayName: 'FileUpload',
         this.setState({uploadProgress: pc});
     },
 
+    // All files were uploaded successfully
     handleUploadFinished: function() {
         this.setState({
             uploadProgress: 0,
-            filedragHover: false
+            filedragHover: false,
+            uploadInProgress: false,
+            uploadedFiles: 0
         });
 
         this.clearFile();
         this.props.uploaded();
     },
 
+    // Upload all files
     uploadFiles: function(files) {
-        var upHandler   = this.handleUploadProgress;
-        var formData    = new FormData();
-        var files_count = 0;
+        this.setState({uploadInProgress: true});
+
+        var upHandler       = this.handleUploadProgress;
+        var fileUploaded    = this.fileUploaded;
+        var albumId         = this.props.album._id;
+
+        var filesToUpload = [];
 
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
@@ -105,40 +123,56 @@ var FileUpload = React.createClass({displayName: 'FileUpload',
                 continue;
             }
 
-            files_count += 1;
+            filesToUpload.push(file);
 
-            formData.append('photos[]', file, file.name);
         }
 
-        if(files_count === 0)
+        if(filesToUpload.length === 0)
             this.handleUploadFinished();
 
-        $.ajax({
-            url: '/albums/' + this.props.album._id + '/photos',
-            type: 'POST',
-            xhr: function() {
-                var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload) {
-                    myXhr.upload.addEventListener('progress', function(e) {
-                        upHandler(e);
-                    }.bind(this), false);
-                }
-                return myXhr;
-            },
+        async.eachSeries(filesToUpload, function(file, callback) {
+            var formData    = new FormData();
+            formData.append('photos[]', file, file.name);
 
-            success: function() {
-                this.handleUploadFinished();
-            }.bind(this),
+            $.ajax({
+                url: '/albums/' + albumId + '/photos',
+                type: 'POST',
+                xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if(myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            upHandler(e);
+                        }.bind(this), false);
+                    }
+                    return myXhr;
+                },
 
-            error: function() {
-                alert('Server error. Please try again later.');
-            },
+                success: function() {
+                    console.log('Uploaded ', file.name);
 
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
-        }, 'json');
+                    fileUploaded();
+                    callback();
+                }.bind(this),
+
+                error: function(request, status, err) {
+                    console.log('Error while uploading:', request, status, err);
+
+                    callback(err);
+                },
+
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }, 'json');
+
+        }, function(err) {
+            if(err)
+                alert('Error: ', err);
+
+            console.log('Upload finished');
+            this.handleUploadFinished();
+        }.bind(this));
 
     },
 
@@ -166,21 +200,23 @@ var FileUpload = React.createClass({displayName: 'FileUpload',
     render: function() {
         var dragClasses = {
             'filedrag': true,
-            'filedrag-hover': this.state.filedragHover
+            'filedrag-hover': this.state.filedragHover,
+            'filedrag-uploading': this.state.uploadInProgress
         };
 
         return (
             React.DOM.div( {className:"row file-upload"}, 
                 React.DOM.form( {ref:"uploadform", className:"col-md-12"}, 
                     React.DOM.h5(null, "Choose your files to upload:"),
-                    React.DOM.input( {type:"file", ref:"fileselect", name:"photos[]", multiple:"multiple", onChange:this.uploadSelect}),
+                    React.DOM.input( {type:"file", ref:"fileselect", name:"photos[]", multiple:"multiple", onChange:this.uploadSelect, disabled:this.state.uploadInProgress} ),
                     React.DOM.div(
                         {className:React.addons.classSet(dragClasses),
                         ref:"filedrag",
                         onDrop:this.uploadDrag,
                         onDragOver:this.uploadDragHover,
                         onDragLeave:this.uploadDragHover}, 
-                        "or drag files here"
+                        this.state.uploadInProgress ? 'Upload in progress...' : 'or drag files here',React.DOM.br(null ),
+                        this.state.uploadInProgress ? this.state.uploadedFiles + ' files uploaded.' : ''
                     ),
                     ProgressBar( {active:true, now:this.state.uploadProgress} )
                 )

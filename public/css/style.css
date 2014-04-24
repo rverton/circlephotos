@@ -121,6 +121,11 @@ p {
     border-color: #f00;
     border-style: solid;
 }
+.filedrag-uploading {
+    border:2px solid #555;
+    color:rgb(19, 138, 33);
+    font-size:120%;
+}
 
 /** Modal **/
 .ModalBackdrop {

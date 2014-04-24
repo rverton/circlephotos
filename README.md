@@ -1,6 +1,6 @@
 # Circlephotos
 
-Host your own Photo-Cloud and allow friends to create circles and albums to collaborativly upload photos.
+Host your own Photo-Cloud and allow friends to create circles and albums to collaborative upload photos.
 
 Based on [koajs](http://koajs.com/) and [reactjs](http://facebook.github.io/react/).
 
@@ -8,18 +8,19 @@ Demo: [http://circlephotos.robinverton.de/](http://circlephotos.robinverton.de/)
 
 ## Requirements
 
-    node.js ^0.11.12
+* node.js ^0.11.12
+* imagemagick
 
 ## Installation & Usage
 
-### Node Version
+### Compatible node.js version
 
-    npm install -g n
-    n latest
+    npm install -g n    # Install node version manager
+    n latest            # Switch to latest node version
 
 ### Installation
 
-    git clone
+    git clone https://github.com/rverton/circlephotos
     bower install
     npm install
 
@@ -28,8 +29,6 @@ Demo: [http://circlephotos.robinverton.de/](http://circlephotos.robinverton.de/)
     npm start
 
 Do not forget to set your Amazon S3 credentials!
-
-When running in production you should [compile the reactjs jsx files](http://facebook.github.io/react/docs/tooling-integration.html#jsx) for better performance.
 
 ## Amazon S3
 Use your environment variables to configure Amazon S3 access:
@@ -42,6 +41,8 @@ Use your environment variables to configure Amazon S3 access:
 When working with the .jsx file compile them on-the-fly with:
 
     jsx --extension jsx --watch public/jsx/ public/js/
+
+More information can be found [here](http://facebook.github.io/react/docs/tooling-integration.html#jsx).
 
 ## Credits
 
