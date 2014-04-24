@@ -16,12 +16,6 @@ app.use(session());
 // amazon aws s3 public url
 var AWS_PUBLIC = process.env.AWS_PUBLIC_URL || '';
 
-// auth
-require('./auth');
-var passport = require('koa-passport');
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use(serve('./public/'));
 
 app.use(logger());
