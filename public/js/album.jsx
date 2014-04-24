@@ -325,7 +325,7 @@ var AlbumItem = React.createClass({
         return (
             <li style={this.state.albumStyle} className={classes} onClick={this.openAlbum}>
                 <div style={this.state.imageStyle} className="art-wrap">
-                    <img ref="examplePhoto" src={album.examplePhoto} />
+                    <img ref="examplePhoto" src={album.examplePhoto} className="img-thumbnail" />
                 </div>
                 <h4 style={this.state.textStyle}>{album.name}, <small>{album.photoCount} photos.</small></h4>
             </li>
