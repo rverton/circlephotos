@@ -76,11 +76,12 @@ var Circle = React.createClass({
     },
 
     render: function() {
-        var circle = this.props.model.circle;
+        var circle      = this.props.model.circle;
+        var circleModel = this.props.model;
 
         var albums = circle.albums.map(function(a) {
             return (
-                <AlbumItem model={a} circle={circle} />
+                <AlbumItem model={a} circle={circle} circleModel={circleModel} />
             );
         });
 

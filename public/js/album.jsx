@@ -268,7 +268,7 @@ var AlbumItem = React.createClass({
         window.location.hash = '#/albums/' + album._id;
     },
 
-    componentDidMount: function() {
+    setColors: function() {
 
         if(this.props.model.examplePhoto === '' || typeof this.props.model.examplePhoto === 'undefined') {
             this.setState({
@@ -304,12 +304,18 @@ var AlbumItem = React.createClass({
                 textStyle: textStyle
             });
         }.bind(this);
+    },
 
+    componentDidMount: function() {
+        //this.setColors();
+
+        this.setState({
+                albumStyle: { backgroundColor: '#eeeeee'}
+        });
     },
 
     render: function() {
         var album = this.props.model;
-        console.log(album);
 
         var classes = React.addons.classSet({
             'hide': (typeof this.state.albumStyle.backgroundColor === 'undefined'),
