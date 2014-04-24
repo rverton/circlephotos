@@ -6,20 +6,58 @@
 /* global React, ReactBootstrap, app */
 
 var Button = ReactBootstrap.Button;
+var Modal = ReactBootstrap.Modal;
+var ModalTrigger = ReactBootstrap.ModalTrigger;
+
+var ShareModal = React.createClass({
+
+    notifyEmail: function() {
+        alert('Not yet implemented');
+    },
+
+    shareLink: function() {
+        return app.BASE_URL + '/circles/' + this.props.circle._id;
+    },
+
+    render: function() {
+        return this.transferPropsTo(
+            <Modal title="Share this circle" animation={false} className="shareModal">
+              <div className="modal-body">
+
+                <p>
+                    Send your friends this link:<br />
+                    <input type="text" class="form-control" value={this.shareLink()} />
+                </p>
+
+                <p>
+                    or notify them via e-mail:<br />
+                    <input ref="notifyEmail" type="text" class="form-control" placeholder="friend@email.com" /><br />
+                    <button className="notify" type="button" onClick={this.notifyEmail}>Send Link by email</button>
+                </p>
+
+                <div className="clearfix"></div>
+
+              </div>
+            </Modal>
+        );
+    }
+});
 
 var CircleShareButton = React.createClass({
     share: function() {
-        var url = app.BASE_URL + '/circles/' + this.props.model._id;
+
 
         prompt('Share this link with your friends:', url);
     },
 
     render: function() {
         return (
-            <Button bsSize="small" onClick={this.share}>
-                <span className="glyphicon glyphicon-share-alt"></span>{' '}
-                Share
-            </Button>
+            <ModalTrigger modal={<ShareModal circle={this.props.model} />}>
+                <Button bsSize="small">
+                    <span className="glyphicon glyphicon-share-alt"></span>{' '}
+                    Share
+                </Button>
+            </ModalTrigger>
         );
     }
 });

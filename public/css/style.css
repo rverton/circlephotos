@@ -139,3 +139,18 @@ p {
 img.magnify {
     margin:0 auto;
 }
+
+.shareModal input {
+    width:100%;
+}
+
+.shareModal p {
+    margin-top:10px;
+    margin-bottom:10px;
+    font-size:16px;
+}
+
+.shareModal button.notify {
+    margin-top:5px;
+    float:right;
+}

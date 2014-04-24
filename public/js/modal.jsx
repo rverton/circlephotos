@@ -36,7 +36,7 @@ var ReactLayeredComponentMixin = {
     }
 };
 
-var Modal = React.createClass({
+var ModalSimple = React.createClass({
     killClick: function(e) {
         // clicks on the content shouldn't close the modal
         e.stopPropagation();

@@ -4,7 +4,7 @@
 /* jshint browser:true */
 /* jshint devel:true*/
 
-/* global React, ReactBootstrap, $, Modal, ReactLayeredComponentMixin, ColorThief */
+/* global React, ReactBootstrap, $, ModalSimple, ReactLayeredComponentMixin, ColorThief */
 
 var Button = ReactBootstrap.Button;
 var ProgressBar = ReactBootstrap.ProgressBar;
@@ -32,9 +32,9 @@ var MagnifyImage = React.createClass({
             return <span />;
         }
         return (
-            <Modal onRequestClose={this.handleClick}>
+            <ModalSimple onRequestClose={this.handleClick}>
                 <img src={this.props.img} className="img-responsive magnify" onClick={this.handleClick} />
-            </Modal>
+            </ModalSimple>
         );
     },
 
@@ -212,6 +212,8 @@ var Album = React.createClass({
 
     render: function() {
         var album = this.props.model.album;
+
+        var test = "abc";
 
         var photos = album.photos.map(function(p) {
             return (
