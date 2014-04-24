@@ -1,6 +1,6 @@
 # Circlephotos
 
-Host your own Photo-Cloud and allow friends to create circles and albums to collaborative upload photos.
+Host your own Photo-Cloud and allow friends to create circles and albums to collaborative upload photos to your Amazon S3 bucket.
 
 Based on [koajs](http://koajs.com/) and [reactjs](http://facebook.github.io/react/).
 
@@ -9,7 +9,8 @@ Demo: [http://circlephotos.robinverton.de/](http://circlephotos.robinverton.de/)
 ## Requirements
 
 * node.js ^0.11.12
-* imagemagick
+* imagemagick (thumbnail generation + auto orient non-landscape photos)
+* mongodb
 
 ## Installation & Usage
 
@@ -33,9 +34,9 @@ Do not forget to set your Amazon S3 credentials!
 ## Amazon S3
 Use your environment variables to configure Amazon S3 access:
 
-    export AWS_ACCESS_KEY_ID=
-    export AWS_SECRET_ACCESS_KEY=
-    export AWS_PUBLIC_URL=
+    export AWS_ACCESS_KEY_ID=XYZ
+    export AWS_SECRET_ACCESS_KEY=XYZ
+    export AWS_PUBLIC_URL=https://bucket.s3.amazonaws.com/photos/
 
 ## Developing with reactjs
 When working with the .jsx file compile them on-the-fly with:
