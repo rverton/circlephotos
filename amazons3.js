@@ -2,8 +2,10 @@ var AWS     = require('aws-sdk');
 var fs      = require('fs');
 var s3      = new AWS.S3();
 
-if( !('AWS_ACCESS_KEY_ID' in process.env))
-    console.log('No AWS credentials set!');
+if( !('AWS_ACCESS_KEY_ID' in process.env)) {
+    console.log('Error: No AWS credentials set!');
+    process.exit(1);
+}
 
 module.exports.uploadFile = function(path, mimeType, cb) {
 
@@ -14,7 +16,7 @@ module.exports.uploadFile = function(path, mimeType, cb) {
             return console.log(err);
 
         var params = {
-            Bucket: 'circlephotos',
+            Bucket: process.env.AWS_BUCKET || 'circlephotos',
             Key: 'photos/' + filename,
             ACL: 'public-read',
             ContentType: mimeType,
