@@ -11,6 +11,7 @@ var getAuthPassword = function getAuthPassword(header) {
 };
 
 module.exports = function*(circle, header) {
+
     if(circle.hasOwnProperty('password') && circle.password !== '') {
         var password = getAuthPassword(header);
 
@@ -24,6 +25,7 @@ module.exports = function*(circle, header) {
             return false;
         }
 
-        return true;
     }
+
+    return true;
 };
