@@ -226,6 +226,8 @@ var FileUpload = React.createClass({displayName: 'FileUpload',
 });
 
 var Album = React.createClass({displayName: 'Album',
+    mixins: [GoogleAnalyticsMixin],
+
     getInitialState: function() {
         return {
             upload: false,

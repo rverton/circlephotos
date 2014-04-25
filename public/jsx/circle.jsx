@@ -93,6 +93,7 @@ var AlbumAddButton = React.createClass({
 });
 
 var Circle = React.createClass({
+    mixins: [GoogleAnalyticsMixin],
 
     addAlbum: function(name) {
         this.props.model.albumAdd(name);

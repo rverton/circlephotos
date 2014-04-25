@@ -12,6 +12,7 @@ var cx = React.addons.classSet;
     app.BASE_URL = window.location.host;
 
     var NavBar = React.createClass({displayName: 'NavBar',
+
         render: function() {
             var classes = cx({
                 'navbar': true,

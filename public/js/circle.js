@@ -93,6 +93,7 @@ var AlbumAddButton = React.createClass({displayName: 'AlbumAddButton',
 });
 
 var Circle = React.createClass({displayName: 'Circle',
+    mixins: [GoogleAnalyticsMixin],
 
     addAlbum: function(name) {
         this.props.model.albumAdd(name);

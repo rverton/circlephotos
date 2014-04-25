@@ -15,6 +15,8 @@ var cx = React.addons.classSet;
 var Button = ReactBootstrap.Button;
 
 var Splash = React.createClass({displayName: 'Splash',
+    mixins: [GoogleAnalyticsMixin],
+
     render: function() {
         return (
             React.DOM.div( {className:"splash"}, 
