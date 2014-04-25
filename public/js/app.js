@@ -45,12 +45,42 @@ var cx = React.addons.classSet;
         }
     });
 
+    var CirclePassword = React.createClass({displayName: 'CirclePassword',
+
+        setPassword: function() {
+            this.props.circle.setPassword(this.refs.password.getDOMNode().value);
+            this.props.album.setPassword(this.refs.password.getDOMNode().value);
+            this.props.onSet();
+        },
+
+        render: function() {
+            return (
+                React.DOM.div( {className:"container"}, 
+                    React.DOM.div( {className:"row"}, 
+                        React.DOM.div( {className:"col-md-12 circle"}, 
+
+                            React.DOM.h4(null, "This circles requires a password:"),
+
+                            React.DOM.div( {className:"form-inline"}, 
+                                React.DOM.div( {className:"form-group"}, 
+                                    React.DOM.input( {ref:"password", type:"password", className:"form-control"} )
+                                ),
+                                Button( {bsStyle:"success", bsSize:"small", className:"space-left", onClick:this.setPassword}, "Procceed")
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    });
+
     var CFApp = React.createClass({displayName: 'CFApp',
 
         getInitialState: function() {
             return {
                 page: '/',
-                circle: null
+                circle: {},
+                album: {}
             };
         },
 
@@ -60,6 +90,7 @@ var cx = React.addons.classSet;
 
             var router = Router({
                 '/': setState.bind(this, {page: '/'}),
+
                 '/circles/:id': function(id) {
                     props.circleModel.load(id);
 
@@ -68,6 +99,14 @@ var cx = React.addons.classSet;
                         circle: props.circleModel.circle
                     });
                 }.bind(this),
+
+                '/circles/:id/pw': function(id) {
+                    this.setState({
+                        page: 'setPassword',
+                        circle: {_id: id}
+                    });
+                }.bind(this),
+
                 '/albums/:id': function(id) {
                     props.albumModel.load(id);
 
@@ -75,10 +114,25 @@ var cx = React.addons.classSet;
                         page: 'viewAlbum',
                         album: props.albumModel.album
                     });
-                }.bind(this)
+                }.bind(this),
+
+                '/albums/:id/pw': function(id) {
+                    this.setState({
+                        page: 'setPassword',
+                        circle: {_id: id},
+                        album: {_id: id}
+                    });
+                }.bind(this),
             });
 
             router.init('/');
+        },
+
+        passwordSet: function() {
+            if(typeof this.state.album._id !== 'undefined')
+                window.location.hash = '#/albums/' + this.state.album._id;
+            else
+                window.location.hash = '#/circles/' + this.state.circle._id;
         },
 
         render: function () {
@@ -107,6 +161,17 @@ var cx = React.addons.classSet;
                             React.DOM.div( {className:"container"}, 
                                 Album( {model:this.props.albumModel} )
                             )
+                        )
+                    );
+
+                case 'setPassword':
+                    return (
+                        React.DOM.div(null, 
+                            NavBar(null ),
+                            CirclePassword(
+                                {circle:this.props.circleModel,
+                                album:this.props.albumModel,
+                                onSet:this.passwordSet})
                         )
                     );
             }

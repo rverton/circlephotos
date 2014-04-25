@@ -6,6 +6,8 @@ var fs          = require('fs');
 var async       = require('async');
 var devnull     = require('dev-null');
 
+var auth        = require('./authorization');
+
 var circlesCollection;
 var albumsCollection;
 var photosCollection;
@@ -118,6 +120,19 @@ module.exports = function(router, db, AWS_URI) {
         var id = this.params.id;
 
         var album   = yield albumsCollection.findById(id);
+        var circle  = yield circlesCollection.findById(album.circleId);
+
+        if(!album || !circle) {
+            this.status = 404;
+            return;
+        }
+
+        var authenticated = yield auth(circle, this.request.header);
+        if(!authenticated) {
+            this.status = 403;
+            return;
+        }
+
         var photos  = yield photosCollection.find({albumId: album._id});
 
         photos = photos.map(function(p) {
@@ -148,10 +163,17 @@ module.exports = function(router, db, AWS_URI) {
         var id = this.params.id;
 
         var album = yield albumsCollection.findOne({_id: id});
+        var circle  = yield circlesCollection.findById(album.circleId);
 
-        if(!album) {
+        if(!album || !circle) {
             this.status = 404;
             this.body = '';
+            return;
+        }
+
+        var authenticated = yield auth(circle, this.request.header);
+        if(!authenticated) {
+            this.status = 403;
             return;
         }
 

@@ -8,6 +8,12 @@ var app         = koa();
 
 var db      = require('monk')('localhost/circlephotos');
 
+/*
+ * Circle: {_id, name, password}
+ * Album {_id, name, circleId, photoCount}
+ * Photo {_id, albumId}
+ */
+
 // sessions
 var session = require('koa-sess');
 app.keys    = ['CHANGE-ME'];

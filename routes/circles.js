@@ -1,10 +1,7 @@
 var wrap        = require('co-monk');
+var auth        = require('./authorization');
 
-/*
- * Circle: {_id, name}
- * Album {_id, name, circleId, photoCount}
- * Photo {_id, albumId}
- */
+var bcrypt      = require('bcrypt-nodejs');
 
 module.exports = function(router, db) {
 
@@ -36,7 +33,39 @@ module.exports = function(router, db) {
             return;
         }
 
+        var authenticated = yield auth(circle, this.request.header);
+        if(!authenticated) {
+            this.status = 403;
+            return;
+        }
+
         circle.albums = yield albumsCollection.find({circleId: circle._id});
+
+        this.set('Content-Type', 'application/json');
+        this.body = JSON.stringify(circle);
+
+    });
+
+    router.post('/circles/:id/pw', function*() {
+        var id          = this.params.id;
+        var password    = this.request.body.password || '';
+
+        password = bcrypt.hashSync(password);
+
+        var circle = yield circlesCollection.findById(id);
+
+        if(!circle) {
+            this.status = 404;
+            return;
+        }
+
+        var authenticated = yield auth(circle, this.request.header);
+        if(!authenticated) {
+            this.status = 403;
+            return;
+        }
+
+        yield circlesCollection.updateById(circle._id, {'$set': { password: password }});
 
         this.set('Content-Type', 'application/json');
         this.body = JSON.stringify(circle);
@@ -51,6 +80,12 @@ module.exports = function(router, db) {
 
         if(!circle) {
             this.status = 404;
+            return;
+        }
+
+        var authenticated = yield auth(circle, this.request.header);
+        if(!authenticated) {
+            this.status = 403;
             return;
         }
 

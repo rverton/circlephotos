@@ -9,6 +9,52 @@ var Button = ReactBootstrap.Button;
 var Modal = ReactBootstrap.Modal;
 var ModalTrigger = ReactBootstrap.ModalTrigger;
 
+var PasswordModal = React.createClass({
+
+    savePassword: function() {
+        var pw  = this.refs.password.getDOMNode().value;
+        var pw2 = this.refs.password2.getDOMNode().value;
+
+        if(pw != pw2)
+            return alert('These passwords are not the same.');
+
+        this.props.onRequestHide();
+        this.props.circleModel.savePassword(pw);
+    },
+
+    render: function() {
+        return this.transferPropsTo(
+            <Modal title="Set password" animation={false} className="passwordModal">
+              <div className="modal-body">
+
+                 <form className="form-horizontal">
+                    <div className="form-group">
+                        <label className="col-sm-4 control-label">
+                            Choose a password:
+                        </label>
+                        <div className="col-sm-8">
+                            <input ref="password" type="password" class="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="col-sm-4 control-label">
+                            Repeat password:
+                        </label>
+                        <div className="col-sm-8">
+                            <input ref="password2" type="password" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+              </div>
+
+              <div className="modal-footer">
+                <a className="btn btn-primary btn-sm" onClick={this.savePassword}>Save</a>
+              </div>
+            </Modal>
+        );
+    }
+});
+
 var ShareModal = React.createClass({
 
     shareLink: function() {
@@ -29,6 +75,20 @@ var ShareModal = React.createClass({
 
               </div>
             </Modal>
+        );
+    }
+});
+
+var PasswordButton = React.createClass({
+
+    render: function() {
+        return (
+            <ModalTrigger modal={<PasswordModal circleModel={this.props.circleModel} />}>
+                <Button bsSize="small">
+                    <span className="glyphicon glyphicon-lock"></span>{' '}
+                    Set password
+                </Button>
+            </ModalTrigger>
         );
     }
 });
@@ -119,6 +179,10 @@ var Circle = React.createClass({
 
                     <div className="pull-right space-left">
                         <CircleShareButton model={this.props.model.circle}/>
+                    </div>
+
+                    <div className="pull-right space-left">
+                        <PasswordButton circleModel={circleModel}/>
                     </div>
 
                     <div className="pull-right">

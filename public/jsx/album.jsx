@@ -106,7 +106,9 @@ var FileUpload = React.createClass({
 
         var upHandler       = this.handleUploadProgress;
         var fileUploaded    = this.fileUploaded;
-        var albumId         = this.props.album._id;
+        var albumId         = this.props.model.album._id;
+
+        var circlePassword  = this.props.model.password;
 
         var filesToUpload = [];
 
@@ -145,6 +147,10 @@ var FileUpload = React.createClass({
                         }.bind(this), false);
                     }
                     return myXhr;
+                },
+
+                headers: {
+                    "Authorization": circlePassword
                 },
 
                 success: function() {
@@ -249,9 +255,9 @@ var Album = React.createClass({
     },
 
     render: function() {
-        var album = this.props.model.album;
+        var model = this.props.model;
 
-        var photos = album.photos.map(function(p) {
+        var photos = model.album.photos.map(function(p) {
             return (
                 <PhotoThumb photo={p} />
             );
@@ -277,10 +283,10 @@ var Album = React.createClass({
 
                     <div className="visible-sm"><br /></div>
 
-                    <h4>{album.name}, <small>{album.photos.length} photos.</small></h4>
+                    <h4>{model.album.name}, <small>{model.album.photos.length} photos.</small></h4>
 
                     <div className={this.state.upload ? '' : 'hide'}>
-                        <FileUpload album={album} uploaded={this.uploadFinished}/>
+                        <FileUpload model={model} uploaded={this.uploadFinished}/>
                     </div>
 
                     <div className="photos">

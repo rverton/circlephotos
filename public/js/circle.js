@@ -9,6 +9,52 @@ var Button = ReactBootstrap.Button;
 var Modal = ReactBootstrap.Modal;
 var ModalTrigger = ReactBootstrap.ModalTrigger;
 
+var PasswordModal = React.createClass({displayName: 'PasswordModal',
+
+    savePassword: function() {
+        var pw  = this.refs.password.getDOMNode().value;
+        var pw2 = this.refs.password2.getDOMNode().value;
+
+        if(pw != pw2)
+            return alert('These passwords are not the same.');
+
+        this.props.onRequestHide();
+        this.props.circleModel.savePassword(pw);
+    },
+
+    render: function() {
+        return this.transferPropsTo(
+            Modal( {title:"Set password", animation:false, className:"passwordModal"}, 
+              React.DOM.div( {className:"modal-body"}, 
+
+                 React.DOM.form( {className:"form-horizontal"}, 
+                    React.DOM.div( {className:"form-group"}, 
+                        React.DOM.label( {className:"col-sm-4 control-label"}, 
+                            "Choose a password:"
+                        ),
+                        React.DOM.div( {className:"col-sm-8"}, 
+                            React.DOM.input( {ref:"password", type:"password", class:"form-control"} )
+                        )
+                    ),
+                    React.DOM.div( {className:"form-group"}, 
+                        React.DOM.label( {className:"col-sm-4 control-label"}, 
+                            "Repeat password:"
+                        ),
+                        React.DOM.div( {className:"col-sm-8"}, 
+                            React.DOM.input( {ref:"password2", type:"password", class:"form-control"} )
+                        )
+                    )
+                )
+              ),
+
+              React.DOM.div( {className:"modal-footer"}, 
+                React.DOM.a( {className:"btn btn-primary btn-sm", onClick:this.savePassword}, "Save")
+              )
+            )
+        );
+    }
+});
+
 var ShareModal = React.createClass({displayName: 'ShareModal',
 
     shareLink: function() {
@@ -28,6 +74,20 @@ var ShareModal = React.createClass({displayName: 'ShareModal',
                 )
 
               )
+            )
+        );
+    }
+});
+
+var PasswordButton = React.createClass({displayName: 'PasswordButton',
+
+    render: function() {
+        return (
+            ModalTrigger( {modal:PasswordModal( {circleModel:this.props.circleModel} )}, 
+                Button( {bsSize:"small"}, 
+                    React.DOM.span( {className:"glyphicon glyphicon-lock"}),' ',
+                    "Set password"
+                )
             )
         );
     }
@@ -119,6 +179,10 @@ var Circle = React.createClass({displayName: 'Circle',
 
                     React.DOM.div( {className:"pull-right space-left"}, 
                         CircleShareButton( {model:this.props.model.circle})
+                    ),
+
+                    React.DOM.div( {className:"pull-right space-left"}, 
+                        PasswordButton( {circleModel:circleModel})
                     ),
 
                     React.DOM.div( {className:"pull-right"}, 

@@ -1,4 +1,5 @@
 /* jshint devel:true */
+/* jshint browser:true */
 /* global $ */
 
 var app = app || {};
@@ -11,6 +12,7 @@ var app = app || {};
             name: '',
             albums: []
         };
+        this.password = '';
     };
 
     app.Circle.prototype.subscribe = function (onChange) {
@@ -21,11 +23,41 @@ var app = app || {};
         this.onChanges.forEach(function (cb) { cb(); });
     };
 
+    app.Circle.prototype.setPassword = function(password) {
+        this.password = password;
+    };
+
+    app.Circle.prototype.savePassword = function(password) {
+        $.ajax({
+            type: 'POST',
+            url: '/circles/' + this.circle._id + '/pw',
+
+            data: JSON.stringify({ password: password }),
+            contentType: 'application/json',
+
+            headers: {
+                "Authorization": this.password
+            },
+
+            success: function() {
+                this.password = password;
+                alert('Password was updated.');
+            }.bind(this),
+
+            error: handleError
+        });
+    };
+
     app.Circle.prototype.load = function(id) {
 
         $.ajax({
             type: 'GET',
-            url: '/circles/'+id,
+            url: '/circles/' + id,
+
+            headers: {
+                "Authorization": this.password
+            },
+
             success: function(data) {
                 this.circle = data;
                 this.inform();
@@ -35,12 +67,21 @@ var app = app || {};
 
     };
 
+    app.Circle.prototype.refresh = function() {
+        this.load(this.circle._id);
+    };
+
     app.Circle.prototype.new = function(name, cb) {
         $.ajax({
             type: 'POST',
             url: '/circles',
             data: JSON.stringify({ name: name }),
             contentType: 'application/json',
+
+            headers: {
+                "Authorization": this.password
+            },
+
             success: function(data) {
                 var id = data._id;
                 cb(id);
@@ -55,6 +96,10 @@ var app = app || {};
             url: '/circles/' + this.circle._id + '/albums',
             data: JSON.stringify({name: name}),
             contentType: 'application/json',
+
+            headers: {
+                "Authorization": this.password
+            },
 
             success: function(data) {
                 this.circle = data;
@@ -72,6 +117,11 @@ var app = app || {};
             photoCount: 0,
             photos: []
         };
+        this.password = '';
+    };
+
+    app.Album.prototype.setPassword = function(password) {
+        this.password = password;
     };
 
     app.Album.prototype.subscribe = function (onChange) {
@@ -111,6 +161,11 @@ var app = app || {};
         $.ajax({
             type: 'GET',
             url: '/albums/' + id,
+
+            headers: {
+                "Authorization": this.password
+            },
+
             success: function(data) {
                 this.album = data;
                 cb();
@@ -121,6 +176,11 @@ var app = app || {};
     };
 
     var handleError = function(request, status, err) {
+        if(request.status === 403) {
+            window.location.hash = window.location.hash + '/pw';
+            return;
+        }
+
         if(!err)
             alert('Unrecognized error. Please try again later.');
         else

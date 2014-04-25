@@ -30,6 +30,9 @@
     "mongodb": "^1.4.2",
     "easyimage": "^0.1.6",
     "async": "^0.7.0",
-    "dev-null": "^0.1.1"
+    "dev-null": "^0.1.1",
+    "bcrypt-nodejs": "0.0.3",
+    "thunkify": "^2.1.1",
+    "co": "^3.0.5"
   }
 }

@@ -154,11 +154,11 @@ img.magnify {
     margin:0 auto;
 }
 
-.shareModal input {
+.shareModal input, .passwordModal input {
     width:100%;
 }
 
-.shareModal p {
+.shareModal p, .passwordModal p {
     margin-top:10px;
     margin-bottom:10px;
     font-size:16px;
