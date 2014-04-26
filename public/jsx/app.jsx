@@ -51,6 +51,8 @@ var cx = React.addons.classSet;
             this.props.circle.setPassword(this.refs.password.getDOMNode().value);
             this.props.album.setPassword(this.refs.password.getDOMNode().value);
             this.props.onSet();
+
+            return false;
         },
 
         render: function() {
@@ -61,12 +63,12 @@ var cx = React.addons.classSet;
 
                             <h4>This circles requires a password:</h4>
 
-                            <div className="form-inline">
+                            <form className="form-inline" onSubmit={this.setPassword}>
                                 <div className="form-group">
                                     <input ref="password" type="password" className="form-control" />
                                 </div>
                                 <Button bsStyle="success" bsSize="small" className="space-left" onClick={this.setPassword}>Procceed</Button>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
