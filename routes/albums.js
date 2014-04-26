@@ -1,4 +1,5 @@
 var wrap        = require('co-monk');
+var crypto      = require('crypto');
 var parse       = require('co-busboy');
 var easyimg     = require('easyimage');
 var s3          = require('../amazons3');
@@ -14,6 +15,12 @@ var photosCollection;
 
 var THUMB_HEIGHT = 180;
 var AWS_PUBLIC;
+
+var randomValueHex = function randomValueHex(len) {
+    return crypto.randomBytes(Math.ceil(len/2))
+        .toString('hex')
+        .slice(0,len);
+};
 
 var photoQueue = async.queue(function (task, callback) {
 
@@ -54,7 +61,7 @@ var photoQueue = async.queue(function (task, callback) {
         if (fs.existsSync(paths.path_tn))
             fs.unlink(paths.path_tn);
 
-        var examplePhoto = AWS_PUBLIC + photo.albumId + '_' + photo._id + '_tn.' + photo.extension;
+        var examplePhoto = AWS_PUBLIC + photo.albumId + '_' + photo._id + '_' + photo.key + '_tn.' + photo.extension;
         albumsCollection.updateById(photo.albumId, {'$set': { examplePhoto: examplePhoto }}, callback);
 
     });
@@ -96,8 +103,8 @@ var getExtension = function (filename) {
 var getPaths = function getPaths(photo, file) {
 
     var fileExtension   = getExtension(file.filename);
-    var filepath        = '/tmp/' + photo.albumId + '_' + photo._id + '.' + fileExtension;
-    var filepath_tn     = '/tmp/' + photo.albumId + '_' + photo._id + '_tn.' + fileExtension;
+    var filepath        = '/tmp/' + photo.albumId + '_' + photo._id + '_' + photo.key + '.' + fileExtension;
+    var filepath_tn     = '/tmp/' + photo.albumId + '_' + photo._id + '_' + photo.key + '_tn.' + fileExtension;
 
     return {
         extension: fileExtension,
@@ -139,12 +146,12 @@ module.exports = function(router, db, AWS_URI) {
             var tn_path;
 
             if(p.uploaded)
-                tn_path = AWS_PUBLIC + album._id + '_' + p._id + '_tn.' + p.extension;
+                tn_path = AWS_PUBLIC + album._id + '_' + p._id + (p.key ? '_' + p.key : '') +'_tn.' + p.extension;
             else
                 tn_path = '/img/uploading.png';
 
             return {
-                src: AWS_PUBLIC + album._id + '_' + p._id + '.' + p.extension,
+                src: AWS_PUBLIC + album._id + '_' + p._id + (p.key ? '_' + p.key : '') +'.' + p.extension,
                 th: {
                     src: tn_path,
                     height: THUMB_HEIGHT
@@ -194,7 +201,8 @@ module.exports = function(router, db, AWS_URI) {
                 albumId: album._id,
                 createdAt: new Date(),
                 uploaded: false,
-                extension: ''
+                extension: '',
+                key: randomValueHex(32)
             });
 
             var paths = getPaths(photo, part);

@@ -18,6 +18,9 @@ var PasswordModal = React.createClass({
         if(pw != pw2)
             return alert('These passwords are not the same.');
 
+        if(pw.length <= 2)
+            return alert('Please use at least 3 charachters').
+
         this.props.onRequestHide();
         this.props.circleModel.savePassword(pw);
     },
