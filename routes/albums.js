@@ -7,7 +7,7 @@ var fs          = require('fs');
 var async       = require('async');
 var devnull     = require('dev-null');
 
-var auth        = require('./authorization');
+var auth        = require('../authorization');
 
 var circlesCollection;
 var albumsCollection;

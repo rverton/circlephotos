@@ -1,5 +1,5 @@
 var wrap        = require('co-monk');
-var auth        = require('./authorization');
+var auth        = require('../authorization');
 
 var bcrypt      = require('bcrypt-nodejs');
 
