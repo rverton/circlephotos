@@ -45,6 +45,11 @@ When working with the .jsx file compile them on-the-fly with:
 
 More information can be found [here](http://facebook.github.io/react/docs/tooling-integration.html#jsx).
 
+## Misc
+
+* Google Analytics support
+* Images are auto oriented with imagemagick
+
 ## Credits
 
 Code by [Robin Verton](http://robinverton.de).
